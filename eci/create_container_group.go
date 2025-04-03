@@ -76,6 +76,9 @@ func (client *Client) CreateContainerGroupWithCallback(request *CreateContainerG
 // CreateContainerGroupRequest is the request struct for api CreateContainerGroup
 type CreateContainerGroupRequest struct {
 	*requests.RpcRequest
+	AutoCreateEip requests.Boolean `position:"Query" name:"AutoCreateEip"`
+	EipBandwidth  requests.Integer `position:"Query"  name:"EipBandwidth"`
+
 	Containers               []CreateContainer         `position:"Query" name:"Container"  type:"Repeated"`
 	InitContainers           []CreateContainer         `position:"Query" name:"InitContainer"  type:"Repeated"`
 	ResourceOwnerId          requests.Integer          `position:"Query" name:"ResourceOwnerId"`

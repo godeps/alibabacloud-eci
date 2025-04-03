@@ -219,6 +219,22 @@ func (p *ECIProvider) CreatePod(ctx context.Context, pod *v1.Pod) error {
 		eci.Tag{Key: "CreationTimestamp", Value: CreationTimestamp},
 	}
 
+	request.AutoCreateEip = requests.NewBoolean(false)
+	if pod.Annotations != nil {
+		if v, ok := pod.Annotations["k8s.aliyun.com/eci-with-eip"]; ok {
+			if v == "true" {
+				request.AutoCreateEip = requests.NewBoolean(true)
+			}
+		}
+		if v, ok := pod.Annotations["k8s.aliyun.com/eip-bandwidth"]; ok {
+			bandwidth, err := strconv.Atoi(v)
+			if err != nil {
+				return err
+			}
+			request.EipBandwidth = requests.NewInteger(bandwidth)
+		}
+	}
+
 	ContainerGroupName := containerGroupName(pod)
 	request.Tags = tags
 	request.SecurityGroupId = p.secureGroup
